@@ -19,13 +19,15 @@ public class Edge {
     private boolean enabled;
 
     public Edge() {
-        this.idEdge = -1;
-        this.edgeName = "";
+        this(-1,"");
     }
     
     public Edge(int idEdge) {
-        this.idEdge = idEdge;
-        this.edgeName = "";
+        this(-1,"");
+    }
+
+    public Edge(int idEdge, String edgeName) {
+        this(-1,"",1);
     }
 
     public Edge(int idEdge, String edgeName, int weight) {
@@ -84,11 +86,6 @@ public class Edge {
         if(breakLine != null){
             this.breakLine.setWeight(this.weight);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Edge{" + "idEdge=" + idEdge + ", edgeName=" + edgeName + ", weight=" + weight + ", breakLine=" + breakLine + ", enabled=" + enabled + '}';
     }
     
 }

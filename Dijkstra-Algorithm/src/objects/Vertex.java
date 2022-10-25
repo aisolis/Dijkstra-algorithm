@@ -15,19 +15,18 @@ public class Vertex {
     
     private Object data;
     private ArrayList<VertexLinks> adjacentEnabledVertexList;
-    private boolean vertexTraversed;
-    private int left;
+    private boolean vertexTraversed = false;
     private Circle circle;
+    private int left;
     
     private int pathDistance;
     private Vertex previousVertex;
     private boolean mark;    
-    private Coordinates coordinates;
 
     public Vertex() {
         this.data = new Object();
-        this.left = 0;
         this.circle = null;
+        this.left = 0;
         this.initialize();
     }
     
@@ -54,13 +53,17 @@ public class Vertex {
     }
 
     public ArrayList<VertexLinks> getAdjacentEnabledVertexList() {
-        ArrayList<VertexLinks> enabledVertex = new ArrayList<>();
-        for(VertexLinks vl : this.adjacentEnabledVertexList){
-            if(vl.getEdge().isEnabled()){
-                enabledVertex.add(vl);
+        
+        ArrayList<VertexLinks> listAristaAux = null;
+        if(!this.adjacentEnabledVertexList.isEmpty()){
+            listAristaAux = new ArrayList<VertexLinks>();
+            for(VertexLinks vl : this.adjacentEnabledVertexList){
+                if(vl.getEdge().isEnabled()){
+                    listAristaAux.add(vl);
+                }
             }
-        }
-        return enabledVertex;
+        }        
+        return listAristaAux;
     }
 
     public void setAdjacentEnabledVertexList(ArrayList<VertexLinks> adjacentVertexList) {
@@ -105,14 +108,6 @@ public class Vertex {
 
     public void setMark(boolean mark) {
         this.mark = mark;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
-    public void setCoordinates(Coordinates coordinates) {
-        this.coordinates = coordinates;
     }
     
     public void pushAdjacentVertex(VertexLinks vertexLink){

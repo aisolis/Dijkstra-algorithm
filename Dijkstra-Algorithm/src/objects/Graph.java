@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package objects;
+
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ public class Graph {
     private ArrayList<Vertex> vertexList;
 
     public Graph() {
-        this.vertexList = new ArrayList<>();
+        this.vertexList = new ArrayList<Vertex>();
     }
 
     public ArrayList<Vertex> getVertexList() {
@@ -29,17 +30,17 @@ public class Graph {
     public boolean appendVertex(Vertex vertex){
         Vertex auxVertex = this.searchVertex(vertex.getData());
         
-        if(auxVertex != null){
-            return false;
-        }else{
-            this.vertexList.add(vertex);
+        if(auxVertex == null){
+            vertexList.add(vertex);
             return true;
+        }else{
+            return false;
         }
     }
     
     public void appendDirectedLinkedVertex(Vertex fatherVertex, Vertex adjacentVertex, Edge edge){
         if(fatherVertex != null && adjacentVertex != null){
-            fatherVertex.pushAdjacentVertex(edge, fatherVertex);
+            fatherVertex.pushAdjacentVertex(edge, adjacentVertex);
         }
     }
     
@@ -260,5 +261,9 @@ public class Graph {
         deleteEdges(vertex);
     }
 
+    @Override
+    public String toString() {
+        return "Graph{" + "vertexList=" + vertexList + '}';
+    }
     
 }

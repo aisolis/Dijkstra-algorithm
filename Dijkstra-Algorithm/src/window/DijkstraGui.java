@@ -4,6 +4,7 @@
  */
 package window;
 
+import algorithms.Dijkstra;
 import forms.Line;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
@@ -24,6 +25,8 @@ public class DijkstraGui extends javax.swing.JFrame {
     Graph graph = new Graph();
     Vertex startVertex = null;
     Vertex endVertex = null;
+    
+    boolean startVertexMarked = false;
     
     public void drawGraph(){
         canvas.paint(canvas.getGraphics());
@@ -101,7 +104,7 @@ public class DijkstraGui extends javax.swing.JFrame {
         Line line = new Line(c);
         edge.setEnabled(true);
         edge.setBreakLine(line);               
-        System.out.println(edge.toString());
+        //System.out.println(edge.toString());
         this.graph.appendNonDirectedLinkedVertex(this.startVertex, this.endVertex,edge);
        
     }
@@ -134,6 +137,7 @@ public class DijkstraGui extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         instructions = new javax.swing.JTextPane();
+        resetCanvas = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
@@ -186,6 +190,13 @@ public class DijkstraGui extends javax.swing.JFrame {
         instructions.setEditable(false);
         jScrollPane1.setViewportView(instructions);
 
+        resetCanvas.setText("Reiniciar Canvas");
+        resetCanvas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetCanvasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -207,9 +218,7 @@ public class DijkstraGui extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(dijkstraTrigger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(switchToEuclides, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
+                .addComponent(switchToEuclides, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
@@ -217,6 +226,12 @@ public class DijkstraGui extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addContainerGap(15, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(resetCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dijkstraTrigger, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -227,12 +242,14 @@ public class DijkstraGui extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addVertex)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
                 .addComponent(addEdge)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dijkstraTrigger)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(resetCanvas)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
@@ -285,29 +302,37 @@ public class DijkstraGui extends javax.swing.JFrame {
     private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
         int x = evt.getX();
         int y = evt.getY();
+        
         if(evt.getButton() == MouseEvent.BUTTON1 && addVertex.isSelected()){
-            //JOptionPane.showMessageDialog(this,"Clic izquierdo");
             instanceVertex(x, y);
         }else if(evt.getButton() == MouseEvent.BUTTON1 && addEdge.isSelected()){
                             
             if(this.startVertex == null){
                 this.startVertex = this.graph.searchVertex(x, y);
                 this.startVertex.getCircle().setColor(Color.orange);
-                //JOptionPane.showMessageDialog(null,"Seleccione otro nodo para crear una arista");
-                System.out.println("Seleccione otro nodo para crear una arista");
             }else{
                 this.endVertex = this.graph.searchVertex(x, y);                
                 appendEdge();            
                                 
                 this.startVertex.getCircle().setColor(Color.CYAN);
-                
-                String s = (this.startVertex == null) ? "null" : this.startVertex.toString();
-                String s2 = (this.endVertex == null) ? "null" : this.endVertex.toString();
-                System.out.println("start vertex: " + s);
-                System.out.println("end vertex: " + s2);
-                
                 startVertex = null;
                 endVertex = null;
+            }
+        }else if(evt.getButton() == MouseEvent.BUTTON1 && dijkstraTrigger.isSelected()){
+            
+            if(this.graph.searchVertex(x, y)!=null){
+                if(this.startVertex == null){
+                    this.graph.resetGraph();
+                    this.graph.resetVertexColoring();
+                    this.startVertex = this.graph.searchVertex(x, y);
+                    this.startVertex.getCircle().setColor(Color.ORANGE);
+                }else{  
+                    this.endVertex = this.graph.searchVertex(x, y);
+                    this.endVertex.getCircle().setColor(Color.ORANGE);
+                    Dijkstra dijkstra = new Dijkstra(this.graph);
+                    dijkstra.doShortestRoute(this.startVertex);
+                    dijkstra.coloringEdgesShortestPath(this.endVertex, Color.MAGENTA);
+                }
             }
         }
         drawGraph();
@@ -336,6 +361,10 @@ public class DijkstraGui extends javax.swing.JFrame {
         instructions.setText("Para usar el algortimo dijkstra. \n\n 1) Haz click en cualquier Vertice que desees que sea el vertice origen \n\n 2) Selecciona el vertice final \n\n 3) El camino mas corto se marcara de color rojo" );
 
     }//GEN-LAST:event_dijkstraTriggerActionPerformed
+
+    private void resetCanvasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetCanvasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_resetCanvasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -384,6 +413,7 @@ public class DijkstraGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToggleButton resetCanvas;
     private javax.swing.JButton switchToEuclides;
     // End of variables declaration//GEN-END:variables
 }
