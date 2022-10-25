@@ -189,6 +189,11 @@ public class DijkstraGui extends javax.swing.JFrame {
         jLabel3.setText("Dijkstra");
 
         switchToEuclides.setText("Cambiar a Euclides");
+        switchToEuclides.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                switchToEuclidesActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Instrucciones de uso:");
@@ -379,6 +384,12 @@ public class DijkstraGui extends javax.swing.JFrame {
          drawGraph();
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void switchToEuclidesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchToEuclidesActionPerformed
+        EuclidesGui euclidesGui = new EuclidesGui();
+        euclidesGui.show();
+        dispose();
+    }//GEN-LAST:event_switchToEuclidesActionPerformed
 
     /**
      * @param args the command line arguments
