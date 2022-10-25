@@ -358,7 +358,7 @@ public class DijkstraGui extends javax.swing.JFrame {
             addEdge.setSelected(false);
         }
         
-        instructions.setText("Para usar el algortimo dijkstra. \n\n 1) Haz click en cualquier Vertice que desees que sea el vertice origen \n\n 2) Selecciona el vertice final \n\n 3) El camino mas corto se marcara de color rojo" );
+        instructions.setText("Para usar el algortimo dijkstra. \n\n 1) Haz click en cualquier Vertice que desees que sea el vertice origen \n\n 2) Selecciona el vertice final \n\n 3) El camino mas corto se marcara de color magenta" );
 
     }//GEN-LAST:event_dijkstraTriggerActionPerformed
 
