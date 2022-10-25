@@ -137,7 +137,7 @@ public class DijkstraGui extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         instructions = new javax.swing.JTextPane();
-        resetCanvas = new javax.swing.JToggleButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
@@ -190,10 +190,10 @@ public class DijkstraGui extends javax.swing.JFrame {
         instructions.setEditable(false);
         jScrollPane1.setViewportView(instructions);
 
-        resetCanvas.setText("Reiniciar Canvas");
-        resetCanvas.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Reinicias canvas");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetCanvasActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -228,9 +228,9 @@ public class DijkstraGui extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(resetCanvas, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dijkstraTrigger, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(dijkstraTrigger, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -248,9 +248,9 @@ public class DijkstraGui extends javax.swing.JFrame {
                 .addComponent(addEdge)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(dijkstraTrigger)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(resetCanvas)
                 .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -362,9 +362,11 @@ public class DijkstraGui extends javax.swing.JFrame {
 
     }//GEN-LAST:event_dijkstraTriggerActionPerformed
 
-    private void resetCanvasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetCanvasActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_resetCanvasActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         this.graph.resetGraph(true);
+         drawGraph();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -407,13 +409,13 @@ public class DijkstraGui extends javax.swing.JFrame {
     private javax.swing.JPanel canvas;
     private javax.swing.JToggleButton dijkstraTrigger;
     private javax.swing.JTextPane instructions;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton resetCanvas;
     private javax.swing.JButton switchToEuclides;
     // End of variables declaration//GEN-END:variables
 }

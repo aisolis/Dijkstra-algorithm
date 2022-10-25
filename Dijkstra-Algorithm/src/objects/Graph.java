@@ -191,6 +191,13 @@ public class Graph {
         }
     }
     
+    public void resetGraph(boolean delete){
+        if(delete){
+            this.vertexList = new ArrayList<>();
+        }
+    }
+    
+    
     public boolean deleteVertex(Vertex vertex){
         boolean removed = false;
         
