@@ -4,12 +4,108 @@
  */
 package window;
 
+import forms.Line;
+import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import objects.Coordinates;
+import objects.Edge;
+import objects.Graph;
+import objects.Vertex;
+import objects.VertexLinks;
+
 /**
  *
  * @author swords
  */
 public class DijkstraGui extends javax.swing.JFrame {
 
+    Graph graph = new Graph();
+    Vertex startVertex = null;
+    Vertex endVertex = null;
+    
+    public void drawGraph(){
+        canvas.paint(canvas.getGraphics());
+        drawEdge();
+        drawVertex();
+    }
+    
+    public void drawVertex(){
+        ArrayList<Vertex> vertexList = this.graph.getVertexList();
+        for(Vertex vertex: vertexList){            
+            vertex.getCircle().drawCircle(canvas.getGraphics());
+        }
+    }
+    
+    public void drawEdge(){
+        ArrayList<Vertex> vertexList = this.graph.getVertexList();
+        for(Vertex vertex : vertexList){            
+            ArrayList<VertexLinks> edgeList = vertex.getAdjacentEnabledVertexList();
+            if(edgeList != null){
+                for(VertexLinks vl : edgeList){
+                    vl.getEdge().getBreakLine().drawLine(canvas.getGraphics());
+                }
+            }            
+        }
+    }
+    
+    private int enterWeight(){
+        String weight = JOptionPane.showInputDialog("Escriba la distancia entre los vertices");
+        int intWeight = 0;
+        
+        try{
+            intWeight = Integer.parseInt(weight);            
+        }catch(Exception ex){
+            intWeight = enterWeight();
+        }
+        return intWeight;
+    }
+    
+    private void deleteVertex(int x,int y){
+        Vertex temp = this.graph.searchVertex(x, y);
+        if(temp != null){
+            this.graph.deleteincomingEdges(temp);
+            if(this.graph.deleteVertex(temp)){
+                JOptionPane.showMessageDialog(null,"Se ha eliminado el vertice");
+                drawGraph();
+            }
+            
+        }
+    }
+    
+    private void instanceVertex(int x, int y){
+        Coordinates c = new Coordinates(100000,100000, x, y);
+            String vertexName = JOptionPane.showInputDialog("Escriba el nombre del Vertice");
+            if(vertexName != null){
+                vertexName = vertexName.toUpperCase();//por que lo quiero todo en mayusculas
+                Vertex vertex = new Vertex(vertexName,c);
+                vertex.getCircle().setDiameter(30);
+                vertex.getCircle().setLabel(vertex.getData() + "");
+                if(this.graph.appendVertex(vertex)){
+                    vertex.getCircle().drawCircle(canvas.getGraphics());
+                }else{
+                }
+                startVertex = null;
+                endVertex = null; 
+            }
+    }
+    
+    private void appendEdge(){
+        int weight = enterWeight();
+        Edge edge = new Edge();
+        edge.setWeight(weight);
+        Coordinates c = new Coordinates(100000,100000);
+        c.addCoordinate(this.startVertex.getCircle().getX() + (this.startVertex.getCircle().getDiameter()/2),this.startVertex.getCircle().getY() + (this.startVertex.getCircle().getDiameter()/2));
+        c.addCoordinate(this.endVertex.getCircle().getX() + (this.endVertex.getCircle().getDiameter()/2),this.endVertex.getCircle().getY() + (this.endVertex.getCircle().getDiameter()/2));
+        Line line = new Line(c);
+        edge.setEnabled(true);
+        edge.setBreakLine(line);               
+        System.out.println(edge.toString());
+        this.graph.appendNonDirectedLinkedVertex(this.startVertex, this.endVertex,edge);
+       
+    }
+    
     /**
      * Creates new form DijkstraGui
      */
@@ -26,16 +122,18 @@ public class DijkstraGui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
+        canvas = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         addVertex = new javax.swing.JToggleButton();
         addEdge = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        dijkstraTrigger = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         switchToEuclides = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        instructions = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
@@ -43,7 +141,12 @@ public class DijkstraGui extends javax.swing.JFrame {
         setLocation(new java.awt.Point(0, 0));
         setLocationByPlatform(true);
 
-        jPanel2.setBackground(new java.awt.Color(253, 254, 254));
+        canvas.setBackground(new java.awt.Color(253, 254, 254));
+        canvas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                canvasMouseClicked(evt);
+            }
+        });
 
         addVertex.setText("Añadir Vertices");
         addVertex.addActionListener(new java.awt.event.ActionListener() {
@@ -53,8 +156,18 @@ public class DijkstraGui extends javax.swing.JFrame {
         });
 
         addEdge.setText("Añadir aristas");
+        addEdge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addEdgeActionPerformed(evt);
+            }
+        });
 
-        jToggleButton1.setText("Camino mas corto");
+        dijkstraTrigger.setText("Camino mas corto");
+        dijkstraTrigger.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dijkstraTriggerActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Algoritmo");
@@ -69,6 +182,9 @@ public class DijkstraGui extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Instrucciones de uso:");
+
+        instructions.setEditable(false);
+        jScrollPane1.setViewportView(instructions);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,17 +204,19 @@ public class DijkstraGui extends javax.swing.JFrame {
                                 .addComponent(jLabel3))
                             .addComponent(addVertex)
                             .addComponent(addEdge, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dijkstraTrigger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(switchToEuclides, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,24 +232,26 @@ public class DijkstraGui extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(addEdge)
                 .addGap(18, 18, 18)
-                .addComponent(jToggleButton1)
+                .addComponent(dijkstraTrigger)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
-                .addGap(314, 314, 314)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(switchToEuclides)
                 .addGap(15, 15, 15))
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout canvasLayout = new javax.swing.GroupLayout(canvas);
+        canvas.setLayout(canvasLayout);
+        canvasLayout.setHorizontalGroup(
+            canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(canvasLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 777, Short.MAX_VALUE))
+                .addGap(861, 861, 861))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        canvasLayout.setVerticalGroup(
+            canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -139,19 +259,83 @@ public class DijkstraGui extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(canvas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(canvas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void addVertexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addVertexActionPerformed
-        // TODO add your handling code here:
+        if(addEdge.isSelected()){
+            addEdge.setSelected(false);
+        }
+        
+        if(dijkstraTrigger.isSelected()){
+            dijkstraTrigger.setSelected(false);
+        }
+        
+        instructions.setText("Para Añadir vertices. \n\n 1) Haz click en cualquier parte de la zona en color blanco \n\n 2) Digita un nombre para el vertice \n\n 3) añade mas vertices" );
+        
     }//GEN-LAST:event_addVertexActionPerformed
+
+    private void canvasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_canvasMouseClicked
+        int x = evt.getX();
+        int y = evt.getY();
+        if(evt.getButton() == MouseEvent.BUTTON1 && addVertex.isSelected()){
+            //JOptionPane.showMessageDialog(this,"Clic izquierdo");
+            instanceVertex(x, y);
+        }else if(evt.getButton() == MouseEvent.BUTTON1 && addEdge.isSelected()){
+                            
+            if(this.startVertex == null){
+                this.startVertex = this.graph.searchVertex(x, y);
+                this.startVertex.getCircle().setColor(Color.orange);
+                //JOptionPane.showMessageDialog(null,"Seleccione otro nodo para crear una arista");
+                System.out.println("Seleccione otro nodo para crear una arista");
+            }else{
+                this.endVertex = this.graph.searchVertex(x, y);                
+                appendEdge();            
+                                
+                this.startVertex.getCircle().setColor(Color.CYAN);
+                
+                String s = (this.startVertex == null) ? "null" : this.startVertex.toString();
+                String s2 = (this.endVertex == null) ? "null" : this.endVertex.toString();
+                System.out.println("start vertex: " + s);
+                System.out.println("end vertex: " + s2);
+                
+                startVertex = null;
+                endVertex = null;
+            }
+        }
+        drawGraph();
+    }//GEN-LAST:event_canvasMouseClicked
+
+    private void addEdgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEdgeActionPerformed
+        if(addVertex.isSelected()){
+            addVertex.setSelected(false);
+        }
+        
+        if(dijkstraTrigger.isSelected()){
+            dijkstraTrigger.setSelected(false);
+        }
+        instructions.setText("Para Añadir aristas. \n\n 1) Haz click en cualquier Vertice ya existente \n\n 2) Selecciona otro vertice \n\n 3) colocale un peso o longitud al camino entre los vertices \n\n 4) puedes conectar el mismo vertice la cantidad de veces que desees" );
+    }//GEN-LAST:event_addEdgeActionPerformed
+
+    private void dijkstraTriggerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dijkstraTriggerActionPerformed
+        if(addVertex.isSelected()){
+            addVertex.setSelected(false);
+        }
+        
+        if(addEdge.isSelected()){
+            addEdge.setSelected(false);
+        }
+        
+        instructions.setText("Para usar el algortimo dijkstra. \n\n 1) Haz click en cualquier Vertice que desees que sea el vertice origen \n\n 2) Selecciona el vertice final \n\n 3) El camino mas corto se marcara de color rojo" );
+
+    }//GEN-LAST:event_dijkstraTriggerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -191,13 +375,15 @@ public class DijkstraGui extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton addEdge;
     private javax.swing.JToggleButton addVertex;
+    private javax.swing.JPanel canvas;
+    private javax.swing.JToggleButton dijkstraTrigger;
+    private javax.swing.JTextPane instructions;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton switchToEuclides;
     // End of variables declaration//GEN-END:variables
 }

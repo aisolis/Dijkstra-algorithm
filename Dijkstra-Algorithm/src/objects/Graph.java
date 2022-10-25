@@ -48,7 +48,7 @@ public class Graph {
         appendDirectedLinkedVertex(adjacentVertex, fatherVertex, edge);
     }
     
-    /*private Vertex searchVertex(int x, int y){
+    public Vertex searchVertex(int x, int y){
         Vertex auxVertex = null;
         
         for(int i = 0; i < this.vertexList.size(); i++){
@@ -64,7 +64,7 @@ public class Graph {
         }
         
         return auxVertex;
-    }*/
+    }
     
     public Vertex searchVertex(Object dato){
         Vertex auxVertex = null;        
@@ -202,13 +202,13 @@ public class Graph {
     public void resetVertexColoring(){
         if(!this.vertexList.isEmpty()){
             for(Vertex vertex: this.vertexList){
-                vertex.getCircle().setColor(Color.yellow);
+                vertex.getCircle().setColor(Color.CYAN);
             ArrayList<VertexLinks> vl = vertex.getAdjacentEnabledVertexList();
                 if(!vl.isEmpty()){
                     for(VertexLinks vl1 : vl){
                         //if(vl1.getEdge().isEnabled()){
-                            //vl1.getEdge().getLineaQuebrada().setColor(Color.black);
-                            //vl1.getEdge().getLineaQuebrada().setGrosorLinea(1);
+                            vl1.getEdge().getBreakLine().setColor(Color.black);
+                            vl1.getEdge().getBreakLine().setLineWeight(2);
                         //}
                     }
                 }

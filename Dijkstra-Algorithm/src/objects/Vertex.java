@@ -40,7 +40,7 @@ public class Vertex {
     public Vertex(Object data, Coordinates coordinates){
         this.data = data;
         this.adjacentEnabledVertexList = new ArrayList<>();
-        this.circle = new Circle(this.coordinates);
+        this.circle = new Circle(coordinates);
         this.circle.setLeft(this.left);
         this.initialize();
     }

@@ -23,7 +23,7 @@ public class Circle {
 
     public Circle(Coordinates coordinates) {
         this.coordinates = coordinates;
-        this.color = Color.yellow;
+        this.color = Color.CYAN;
         this.diameter = 30;
         this.label = "";
         this.font = null;
@@ -115,6 +115,9 @@ public class Circle {
             if(!this.label.equals("")){
                 if(this.font != null){
                     g.setFont(this.font);
+                }else{
+                    Font fuente=new Font("Monospaced",Font.BOLD, 13);
+                    g.setFont(fuente);
                 }
                 
                 ((Graphics2D)g).drawString(this.label,this.coordinates.get(0)[0] - (this.left),this.coordinates.get(0)[1]);

@@ -4,6 +4,8 @@
  */
 package objects;
 
+import forms.Line;
+
 /**
  *
  * @author swords
@@ -13,7 +15,7 @@ public class Edge {
     private int idEdge;
     private String edgeName;
     private int weight;
-    //private breakLine;
+    private Line breakLine;
     private boolean enabled;
 
     public Edge() {
@@ -30,6 +32,7 @@ public class Edge {
         this.idEdge = idEdge;
         this.edgeName = edgeName;
         this.weight = weight;
+        this.breakLine = null;
         this.enabled = true;
     }
 
@@ -71,6 +74,21 @@ public class Edge {
         this.idEdge = -1;
         this.weight = -1;
     }
-    
+
+    public Line getBreakLine() {
+        return breakLine;
+    }
+
+    public void setBreakLine(Line breakLine) {
+        this.breakLine = breakLine;
+        if(breakLine != null){
+            this.breakLine.setWeight(this.weight);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Edge{" + "idEdge=" + idEdge + ", edgeName=" + edgeName + ", weight=" + weight + ", breakLine=" + breakLine + ", enabled=" + enabled + '}';
+    }
     
 }
