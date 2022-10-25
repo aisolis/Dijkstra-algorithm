@@ -24,10 +24,7 @@ public class EuclidesGui extends javax.swing.JFrame{
      */
     public EuclidesGui() {
         initComponents();
-        
-        Toolkit tolToolkit = getToolkit();
-        Dimension size = tolToolkit.getScreenSize();
-        setLocation(size.width/2 - getWidth()/2, size.height/2-getHeight()/2);
+        setLocation(0,0);
         setSize(700,530);
         setResizable(false);
         initialize();
@@ -101,7 +98,7 @@ public class EuclidesGui extends javax.swing.JFrame{
         jPanel2.add(jLabel6);
         jLabel6.setBounds(10, 140, 116, 16);
 
-        variables.setText("Ingrese un número ");
+        variables.setToolTipText("Ingrese un texto");
 
         addbutton.setText("Aceptar");
         addbutton.addActionListener(new java.awt.event.ActionListener() {
@@ -210,6 +207,7 @@ public class EuclidesGui extends javax.swing.JFrame{
     }//GEN-LAST:event_switchToDijkstraActionPerformed
 
     private void initialize(){
+        this.instructions.setText("Algortimo de euclides: \n\n  Para poder hacer uso de este algoritmo brindele 2 numeros al profesor euclides, seguido de esto, espere la respuesta del profesor.");
         this.consoleArea.setText("");
         this.consoleArea.setText("Euclides: Por favor ingresa un valor para A y para B cuando sea requerido: \n Ingresa el valor de 'a': ");
     }
