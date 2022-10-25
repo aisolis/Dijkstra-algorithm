@@ -4,6 +4,7 @@
  */
 package algorithms;
 
+import algorithms.util.VertexList;
 import java.awt.Color;
 import java.util.ArrayList;
 import objects.Edge;

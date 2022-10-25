@@ -7,6 +7,8 @@ package window;
 import algorithms.Dijkstra;
 import forms.Line;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -25,8 +27,6 @@ public class DijkstraGui extends javax.swing.JFrame {
     Graph graph = new Graph();
     Vertex startVertex = null;
     Vertex endVertex = null;
-    
-    boolean startVertexMarked = false;
     
     public void drawGraph(){
         canvas.paint(canvas.getGraphics());
@@ -114,6 +114,10 @@ public class DijkstraGui extends javax.swing.JFrame {
      */
     public DijkstraGui() {
         initComponents();
+        
+        Toolkit tolToolkit = getToolkit();
+        Dimension size = tolToolkit.getScreenSize();
+        setLocation(size.width/2 - getWidth()/2, size.height/2-getHeight()/2);
     }
 
     /**
@@ -140,10 +144,12 @@ public class DijkstraGui extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Algoritmo de dijkstra y euclides - Mate Discreta");
         setAutoRequestFocus(false);
         setBackground(new java.awt.Color(88, 214, 141));
         setLocation(new java.awt.Point(0, 0));
         setLocationByPlatform(true);
+        setResizable(false);
 
         canvas.setBackground(new java.awt.Color(253, 254, 254));
         canvas.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -237,11 +243,11 @@ public class DijkstraGui extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(addVertex)
                 .addGap(12, 12, 12)
@@ -265,7 +271,7 @@ public class DijkstraGui extends javax.swing.JFrame {
             canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(canvasLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(861, 861, 861))
+                .addContainerGap(1264, Short.MAX_VALUE))
         );
         canvasLayout.setVerticalGroup(
             canvasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,7 +286,9 @@ public class DijkstraGui extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(canvas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(canvas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -304,36 +312,40 @@ public class DijkstraGui extends javax.swing.JFrame {
         int y = evt.getY();
         
         if(evt.getButton() == MouseEvent.BUTTON1 && addVertex.isSelected()){
-            instanceVertex(x, y);
+            try {
+                instanceVertex(x, y);
+            } catch (Exception e) {}
         }else if(evt.getButton() == MouseEvent.BUTTON1 && addEdge.isSelected()){
-                            
-            if(this.startVertex == null){
-                this.startVertex = this.graph.searchVertex(x, y);
-                this.startVertex.getCircle().setColor(Color.orange);
-            }else{
-                this.endVertex = this.graph.searchVertex(x, y);                
-                appendEdge();            
-                                
-                this.startVertex.getCircle().setColor(Color.CYAN);
-                startVertex = null;
-                endVertex = null;
-            }
-        }else if(evt.getButton() == MouseEvent.BUTTON1 && dijkstraTrigger.isSelected()){
-            
-            if(this.graph.searchVertex(x, y)!=null){
+            try{
                 if(this.startVertex == null){
-                    this.graph.resetGraph();
-                    this.graph.resetVertexColoring();
-                    this.startVertex = this.graph.searchVertex(x, y);
-                    this.startVertex.getCircle().setColor(Color.ORANGE);
-                }else{  
-                    this.endVertex = this.graph.searchVertex(x, y);
-                    this.endVertex.getCircle().setColor(Color.ORANGE);
-                    Dijkstra dijkstra = new Dijkstra(this.graph);
-                    dijkstra.doShortestRoute(this.startVertex);
-                    dijkstra.coloringEdgesShortestPath(this.endVertex, Color.MAGENTA);
+                   this.startVertex = this.graph.searchVertex(x, y);
+                   this.startVertex.getCircle().setColor(Color.orange);
+                }else{
+                    this.endVertex = this.graph.searchVertex(x, y);                
+                    appendEdge();            
+
+                    this.startVertex.getCircle().setColor(Color.CYAN);
+                    startVertex = null;
+                    endVertex = null;
+                }   
+            }catch(Exception ex){}
+        }else if(evt.getButton() == MouseEvent.BUTTON1 && dijkstraTrigger.isSelected()){
+            try {
+                if(this.graph.searchVertex(x, y)!=null){
+                    if(this.startVertex == null){
+                        this.graph.resetGraph();
+                        this.graph.resetVertexColoring();
+                        this.startVertex = this.graph.searchVertex(x, y);
+                        this.startVertex.getCircle().setColor(Color.ORANGE);
+                    }else{  
+                        this.endVertex = this.graph.searchVertex(x, y);
+                        this.endVertex.getCircle().setColor(Color.ORANGE);
+                        Dijkstra dijkstra = new Dijkstra(this.graph);
+                        dijkstra.doShortestRoute(this.startVertex);
+                        dijkstra.coloringEdgesShortestPath(this.endVertex, Color.MAGENTA);
+                    }
                 }
-            }
+            } catch (Exception e) {}
         }
         drawGraph();
     }//GEN-LAST:event_canvasMouseClicked
