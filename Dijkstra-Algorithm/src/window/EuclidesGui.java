@@ -55,7 +55,7 @@ public class EuclidesGui extends javax.swing.JFrame{
         Limpiar = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(1453, 793));
-        setLayout(null);
+        getContentPane().setLayout(null);
 
         canvasEuclides.setBackground(new java.awt.Color(251, 252, 252));
 
@@ -154,7 +154,7 @@ public class EuclidesGui extends javax.swing.JFrame{
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        add(canvasEuclides);
+        getContentPane().add(canvasEuclides);
         canvasEuclides.setBounds(-10, -10, 700, 510);
     }// </editor-fold>//GEN-END:initComponents
 

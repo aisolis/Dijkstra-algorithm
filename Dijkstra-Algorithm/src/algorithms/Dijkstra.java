@@ -73,7 +73,6 @@ public class Dijkstra {
             for(int i = 0;i < this.edgeList.size();i++){
                 if(!this.edgeList.isEmpty()){
                     this.edgeList.get(i).getBreakLine().setColor(color);
-                    this.edgeList.get(i).getBreakLine().setWeight(4);
                 }
             }
         }

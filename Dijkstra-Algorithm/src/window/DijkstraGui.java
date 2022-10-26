@@ -65,18 +65,6 @@ public class DijkstraGui extends javax.swing.JFrame {
         return intWeight;
     }
     
-    private void deleteVertex(int x,int y){
-        Vertex temp = this.graph.searchVertex(x, y);
-        if(temp != null){
-            this.graph.deleteincomingEdges(temp);
-            if(this.graph.deleteVertex(temp)){
-                JOptionPane.showMessageDialog(null,"Se ha eliminado el vertice");
-                drawGraph();
-            }
-            
-        }
-    }
-    
     private void instanceVertex(int x, int y){
         Coordinates c = new Coordinates(100000,100000, x, y);
             String vertexName = JOptionPane.showInputDialog("Escriba el nombre del Vertice");
