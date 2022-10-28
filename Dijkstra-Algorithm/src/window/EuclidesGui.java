@@ -184,7 +184,7 @@ public class EuclidesGui extends javax.swing.JFrame{
                 this.consoleArea.append("\n\n El MCD DE: " + this.a + " y " + this.b + " es: " + String.valueOf(this.euclides.euclidesAlgorithm(this.a, this.b)));
             }
         } catch (Exception e) {
-            this.consoleArea.append("\n\n Euclides: POR FAVOR INGRESA UN VALOR VALIDO!");
+            initialize();
         }
         
     }//GEN-LAST:event_addbuttonActionPerformed
@@ -205,6 +205,8 @@ public class EuclidesGui extends javax.swing.JFrame{
     }//GEN-LAST:event_switchToDijkstraActionPerformed
 
     private void initialize(){
+        this.a = 0;
+        this.b = 0;
         this.instructions.setText("Algortimo de euclides: \n\n  Para poder hacer uso de este algoritmo brindele 2 numeros al profesor euclides, seguido de esto, espere la respuesta del profesor.");
         this.consoleArea.setText("");
         this.consoleArea.setText("Euclides: Por favor ingresa un valor para A y para B cuando sea requerido: \n Ingresa el valor de 'a': ");
