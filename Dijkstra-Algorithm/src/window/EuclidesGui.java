@@ -184,6 +184,8 @@ public class EuclidesGui extends javax.swing.JFrame{
                 this.consoleArea.append("\n\n El MCD DE: " + this.a + " y " + this.b + " es: " + String.valueOf(this.euclides.euclidesAlgorithm(this.a, this.b)));
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,"Euclides: HA INGRESADO UN VALOR INVALIDO, SE REINICIARA EL PROGRAMA");
+            this.variables.setText("");
             initialize();
         }
         
